@@ -170,7 +170,8 @@ impl Reader for Context {
             .await?;
 
         if let Response::ReadInputRegisters(rsp) = rsp {
-            if rsp.len() != cnt.into() {
+            let cnt = cnt.into();
+            if rsp.len() != cnt && rsp.len() != cnt * 2 {
                 return Err(Error::new(ErrorKind::InvalidData, "invalid response"));
             }
             Ok(rsp)
@@ -190,7 +191,8 @@ impl Reader for Context {
             .await?;
 
         if let Response::ReadHoldingRegisters(rsp) = rsp {
-            if rsp.len() != cnt.into() {
+            let cnt = cnt.into();
+            if rsp.len() != cnt && rsp.len() != cnt * 2 {
                 return Err(Error::new(ErrorKind::InvalidData, "invalid response"));
             }
             Ok(rsp)
@@ -217,7 +219,8 @@ impl Reader for Context {
             .await?;
 
         if let Response::ReadWriteMultipleRegisters(rsp) = rsp {
-            if rsp.len() != read_cnt.into() {
+            let read_cnt = read_cnt.into();
+            if rsp.len() != read_cnt && rsp.len() != read_cnt * 2 {
                 return Err(Error::new(ErrorKind::InvalidData, "invalid response"));
             }
             Ok(rsp)
@@ -298,7 +301,8 @@ impl Writer for Context {
             .await?;
 
         if let Response::WriteMultipleRegisters(rsp_addr, rsp_cnt) = rsp {
-            if rsp_addr != addr || usize::from(rsp_cnt) != cnt {
+            let rsp_cnt: usize = rsp_cnt.into();
+            if rsp_addr != addr || (rsp_cnt != cnt && rsp_cnt != cnt * 2) {
                 return Err(Error::new(ErrorKind::InvalidData, "invalid response"));
             }
             Ok(())
